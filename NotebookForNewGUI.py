@@ -57,7 +57,9 @@ import tkinter as tk
 from tkinter import ttk  # for treeview
 from tkinter import filedialog as fd # for opening files
 from tkinter.messagebox import showinfo # for showing filepath
+from tkinter import messagebox
 from ADSsearcherpkg import *
+import csv
 
 my_gui = tk.Tk()
 my_gui.geometry("1600x350")  # width x height
@@ -84,36 +86,86 @@ startLab.grid(row=3, column=1)
 startEnt = tk.Entry(my_gui, width=20, bg="light gray", font=18)  # added one Entry box
 startEnt.grid(row=3, column=2)
 
-endLab = tk.Label(my_gui, text="end year:", width=7, font=18)  #end year label
-endLab.grid(row=4, column=1)
 
-endEnt = tk.Entry(my_gui, width=20, bg="light gray", font=18)  # added one Entry box
-endEnt.grid(row=4, column=2)
 
-#stopDirLab = tk.Label(my_gui, text="stop directory:", width=15, font=18)  #stop directory label
-#stopDirLab.grid(row=4, column=1)
+#endLab = tk.Label(my_gui, text="end year:", width=7, font=18)  #end year label
+#endLab.grid(row=4, column=1)
 
-#stopDirEnt = tk.Entry(my_gui, width=35, bg="light gray", font=18)  # stop directory Entry box
-#stopDirEnt.grid(row=4, column=2)
+#endEnt = tk.Entry(my_gui, width=20, bg="light gray", font=18)  # added one Entry box
+#endEnt.grid(row=4, column=2)
 
-#stop_dir = None
 
 #(name=None, institution=None, year= None, refereed= 'property:notrefereed OR property:refereed', \
                #token=None, stop_dir=None):
 
+def Save():
+    pass    
+    #with open("new.csv", "w", newline='') as myfile:
+        
+
 def my_search():
+    value = 0
     if len(authEnt.get()) == 0: #check for author name
         author = None
     else:
+        value += 1
         author = authEnt.get()
     if len(instEnt.get()) == 0: #check for institution name
         institute = None
     else:
+        value += 2
         institute = instEnt.get()
+    if len(startEnt.get()) == 0: # or (len(endEnt.get()) != 4): #check for start and end year
+        yr = None
+    elif startEnt.get().isdigit() == False:
+        yr = None
+    else: 
+        value += 4
+        if len(startEnt.get()) == 4:
+            yr = startEnt.get()
+        else:
+            yr = "[2000 to 2023]"
         
-    datf=AP.ads_search(name= author, institution= institute ,
+        # if the len == 4: 
+            #yr = startEnt.get()
+            
+        #if the len is 4
+        #if int
+        #if empty
+        #if longer than 4
+        
+        #print(type(startEnt.get())) #type string, get it to type int
+        
+    # if value == 1:
+    # mirror mallory's code, for 2,3, 5, 6,7 and well
+    #access just the function and the value
+    
+    print("value: ", value)
+    if value == 1:
+        datf = AP.ads_search(name = author, token = token, stop_dir = stop_dir)
+    elif value == 2:
+        datf = AP.ads_search(institution= institute, token = token, stop_dir = stop_dir)
+    elif value == 3:
+        datf=AP.ads_search(name= author, institution= institute ,
                token=token, stop_dir=stop_dir) #creates dataframe
-    print(datf)
+    elif value == 4:
+        #datf = datf = AP.ads_search(year = yr, token = token, stop_dir = stop_dir)
+        showinfo(
+        title='Error',
+        message='You did not give me enough to search on, please try again.'
+    )
+    elif value == 5:
+        datf=AP.ads_search(name= author, year = yr ,
+               token=token, stop_dir=stop_dir)
+    elif value == 6:
+        datf=AP.ads_search(institution= institute, year = yr ,
+               token=token, stop_dir=stop_dir)
+    elif value == 7:
+        datf=AP.ads_search(name= author, institution= institute, year = yr ,
+               token=token, stop_dir=stop_dir)
+    else:
+        return 0
+    #print(type(datf), datf.head())
     l1 = list(datf) # List of column names as headers
     r_set = datf.to_numpy().tolist()  # Create list of list using rows
     trv = ttk.Treeview(my_gui, selectmode="browse")  # selectmode="browse" or "extended"
@@ -122,6 +174,7 @@ def my_search():
     trv["show"] = "headings"
     # column identifiers
     trv["columns"] = l1
+    
     for i in l1:
         trv.column(i, width=110, anchor="c")
         # Headings of respective columns
@@ -134,6 +187,9 @@ def my_search():
         except:
             continue
         #if id value already in chart, find a way to bypass it
+    
+    saveButton = tk.Button(my_gui, text="Save CSV", bg="blue", width=10, font=18, command=datf.to_csv("file_name.csv"))
+    saveButton.grid(row=2, column=3)
     
 my_gui.mainloop()
 
