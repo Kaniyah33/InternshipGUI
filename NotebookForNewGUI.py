@@ -86,22 +86,8 @@ startLab.grid(row=3, column=1)
 startEnt = tk.Entry(my_gui, width=20, bg="light gray", font=18)  # added one Entry box
 startEnt.grid(row=3, column=2)
 
-
-
-#endLab = tk.Label(my_gui, text="end year:", width=7, font=18)  #end year label
-#endLab.grid(row=4, column=1)
-
-#endEnt = tk.Entry(my_gui, width=20, bg="light gray", font=18)  # added one Entry box
-#endEnt.grid(row=4, column=2)
-
-
 #(name=None, institution=None, year= None, refereed= 'property:notrefereed OR property:refereed', \
                #token=None, stop_dir=None):
-
-def Save():
-    pass    
-    #with open("new.csv", "w", newline='') as myfile:
-        
 
 def my_search():
     value = 0
@@ -165,6 +151,8 @@ def my_search():
                token=token, stop_dir=stop_dir)
     else:
         return 0
+    global df2
+    df2 = datf
     #print(type(datf), datf.head())
     l1 = list(datf) # List of column names as headers
     r_set = datf.to_numpy().tolist()  # Create list of list using rows
@@ -188,9 +176,20 @@ def my_search():
             continue
         #if id value already in chart, find a way to bypass it
     
-    saveButton = tk.Button(my_gui, text="Save CSV", bg="blue", width=10, font=18, command=datf.to_csv("file_name.csv"))
+    saveButton = tk.Button(my_gui, text="Save CSV", bg="blue", width=10, font=18, command=lambda:save_to_csv())
     saveButton.grid(row=2, column=3)
-    
+
+def save_to_csv():
+    global df2
+    if df2 is not None:
+        file_path = fd.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+
+        if file_path:
+            df2.to_csv(file_path, index=False)
+            print(f"Data saved to {file_path}")
+    else:
+        print("DataFrame is not available, you must create it first.")
+      
 my_gui.mainloop()
 
 
