@@ -152,6 +152,9 @@ def my_search():
     else:
         return 0
     global df2
+    datf['Bibcode'] = datf['Bibcode'].str.wrap(30)
+    datf["Title"] = datf["Title"].str.wrap(70)
+    datf['Affiliations'] = datf['Affiliations'].str.wrap(30)
     df2 = datf
     #print(type(datf), datf.head())
     l1 = list(datf) # List of column names as headers
