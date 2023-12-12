@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[34]:
+# In[ ]:
 
 
 import requests
@@ -14,7 +14,7 @@ nltk.download('punkt')
 nltk.download('wordnet')
 
 
-# In[35]:
+# In[ ]:
 
 
 #We designed the code to work with Pandas 1.5.3
@@ -25,7 +25,7 @@ print(pd. __version__)
 #pip install pandas==1.5.3 --user
 
 
-# In[36]:
+# In[ ]:
 
 
 #edit the following string pointing to the directory where the stopwords.txt file is
@@ -35,7 +35,7 @@ stop_dir=path_stop+stop_file
 sys.path.append(path_stop)
 
 
-# In[37]:
+# In[ ]:
 
 
 #For the TextAnalysis File, please refer to M. Volze et al. 2023
@@ -43,7 +43,7 @@ import TextAnalysis as TA
 import ADSsearcherpkg as AP
 
 
-# In[38]:
+# In[ ]:
 
 
 #token = 'Your own token from ADS API page ' #Insert your API token
@@ -63,7 +63,7 @@ import csv
 
 my_gui = tk.Tk()
 my_gui.resizable(width = 1600, height = 350)#geometry("1600x350")  # width x height
-my_gui.title("ADSsearch.com")  # Adding a title
+my_gui.title("Space Searcher")  # Adding a title
 style = ttk.Style() #creates a style object
 
 searchButton = tk.Button(my_gui, text="Search", width=7, font=18, command=lambda: my_search()) # search button
@@ -137,7 +137,7 @@ def my_search():
         message='You must insert numbers.'
     )
     elif (startEnt.get() == "ex. XXXX") and (endEnt.get() == "ex. XXXX"): #if the years are the examples, if empty:
-            value += 4
+            #value += 4
             yr = "[2000 to 2023]"
     elif ((startEnt.get().isdigit() == False) and (startEnt.get() != "ex. XXXX")) or ((endEnt.get().isdigit() == False) and (endEnt.get() != "ex. XXXX")) : #if a year is not a digit and not the example
         yr = None
@@ -220,6 +220,7 @@ def my_search():
     datf["Title"] = datf["Title"].str.wrap(70)
     datf['Affiliations'] = datf['Affiliations'].str.wrap(30)
     df2 = datf
+    #print(type(datf), datf.head())
     l1 = list(datf)
     print(l1)# List of column names as headers
     r_set = datf.to_numpy().tolist()  # Create list of list using rows
@@ -271,10 +272,3 @@ def save_to_csv():
         print("DataFrame is not available, you must create it first.")
     
 my_gui.mainloop()
-
-# In[ ]:
-
-
-#datf=AP.ads_search(institution= "Howard University" ,
-               #token=token, stop_dir=stop_dir)
-
